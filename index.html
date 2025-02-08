@@ -50,7 +50,6 @@
   </div>
 
   <script>
-    // Categorization function
     function categorizeQuestion(text) {
       if (/Underworld|gods|heroes|myth/i.test(text)) return "Myth";
       if (/poet|author|literature|play/i.test(text)) return "Literature";
@@ -59,12 +58,10 @@
       return "Uncategorized";
     }
 
-    // Check if the text is in all caps
     function isAllCaps(text) {
       return text === text.toUpperCase() && text.trim() !== "";
     }
 
-    // Process the text input to structure the questions
     function processText() {
       const inputText = document.getElementById('inputText').value;
       const lines = inputText.split("\n");
@@ -78,20 +75,16 @@
           return;
         }
 
-        // Match numbered questions (e.g., "1. Question?")
         const match = line.match(/^(\d+)\.\s(.+)/);
-        // Match bonus questions (e.g., "B1: Question?")
         const bonusMatch = line.match(/^B(\d):\s(.+)/);
         
-        // If it's a new question
+        // if it's a new question
         if (match || bonusMatch) {
           if (currentQuestion) {
-            // Push the previous question if it exists
             currentQuestion.question = currentQuestionText.trim();
             questions.push(currentQuestion);
           }
           
-          // Start a new question
           currentQuestionText = match ? match[2].trim() : bonusMatch[2].trim();
           currentQuestion = {
             category: categorizeQuestion(currentQuestionText),
@@ -99,29 +92,23 @@
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
-          // If the line is all caps, treat it as the answer
           if (isAllCaps(line.trim())) {
-            // Make sure it is after the question and not part of it
             currentQuestion.answer = line.trim();
           } else {
-            // Otherwise, it's part of the question or answer
             currentQuestionText += " " + line.trim();
           }
         }
       });
 
-      // Push the last question
       if (currentQuestion) {
         currentQuestion.question = currentQuestionText.trim();
         questions.push(currentQuestion);
       }
 
-      // Show the output
       document.getElementById('jsonOutput').textContent = JSON.stringify(questions, null, 2);
       document.getElementById('output').style.display = 'block';
     }
 
-    // Handle file upload
     document.getElementById('fileInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file) {
@@ -133,7 +120,6 @@
       }
     });
 
-    // Handle button click to process text
     document.getElementById('processButton').addEventListener('click', processText);
   </script>
 </body>
