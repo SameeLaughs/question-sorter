@@ -73,6 +73,11 @@
       let currentQuestionText = "";
 
       lines.forEach((line) => {
+        // Skip any line containing 'score check'
+        if (/score check/i.test(line)) {
+          return;
+        }
+
         // Match numbered questions (e.g., "1. Question?")
         const match = line.match(/^(\d+)\.\s(.+)/);
         // Match bonus questions (e.g., "B1: Question?")
@@ -96,6 +101,7 @@
         } else if (currentQuestion && line.trim()) {
           // If the line is all caps, treat it as the answer
           if (isAllCaps(line.trim())) {
+            // Make sure it is after the question and not part of it
             currentQuestion.answer = line.trim();
           } else {
             // Otherwise, it's part of the question or answer
