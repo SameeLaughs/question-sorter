@@ -50,7 +50,7 @@
   </div>
 
   <script>
-    function categorizeQuestion(text) {
+ function categorizeQuestion(text) {
       if (/Underworld|gods|heroes|myth/i.test(text)) return "Myth";
       if (/poet|author|literature|Persius|Juvenal|Andronicus|Martial|Petronius|historian|play/i.test(text)) return "Literature";
       if (/war|battle|Hannibal|Sulla|Marius/i.test(text)) return "History";
@@ -70,15 +70,13 @@
       let currentQuestionText = "";
 
       lines.forEach((line) => {
-        // Skip any line containing 'score check'
         if (/score check/i.test(line)) {
           return;
         }
 
         const match = line.match(/^(\d+)\.\s(.+)/);
         const bonusMatch = line.match(/^B(\d):\s(.+)/);
-        
-        // if it's a new question
+
         if (match || bonusMatch) {
           if (currentQuestion) {
             currentQuestion.question = currentQuestionText.trim();
