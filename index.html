@@ -58,8 +58,8 @@
       return "Uncategorized";
     }
 
-    function isAllCaps(text) {
-      return /^[A-Z\s()'-]+$/.test(text.trim()) && text.trim() !== "";
+    function isAnswerLine(text) {
+      return /^[A-Z][A-Z\s()'-]*$/.test(text.trim()) && text.trim() !== "";
     }
 
     function processText() {
@@ -91,7 +91,7 @@
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
-          if (isAllCaps(line.trim())) {
+          if (isAnswerLine(line.trim())) {
             answerLines.push(line.trim());
           } else {
             currentQuestionText += " " + line.trim();
