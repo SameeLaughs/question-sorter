@@ -58,8 +58,8 @@
       return "Uncategorized";
     }
 
-    function isAnswerLine(text) {
-      return /^[A-Z][A-Z\s()'–-]*[a-z]?[A-Z\s()'–-]*$/.test(text.trim()) && text.trim() !== "";
+    function isAllCaps(text) {
+      return text === text.toUpperCase() && text.trim() !== "";
     }
 
     function processText() {
@@ -68,31 +68,32 @@
       const questions = [];
       let currentQuestion = null;
       let currentQuestionText = "";
-      let answerLines = [];
 
       lines.forEach((line) => {
-        if (/score check|round/i.test(line)) return;
+        // Skip any line containing 'score check'
+        if (/score check/i.test(line)) {
+          return;
+        }
 
-        const match = line.match(/^\d+\.\s(.+)/);
-        const bonusMatch = line.match(/^B\d+:\s(.+)/);
+        const match = line.match(/^(\d+)\.\s(.+)/);
+        const bonusMatch = line.match(/^B(\d):\s(.+)/);
         
+        // if it's a new question
         if (match || bonusMatch) {
           if (currentQuestion) {
             currentQuestion.question = currentQuestionText.trim();
-            currentQuestion.answer = answerLines.join(" ").trim();
             questions.push(currentQuestion);
           }
           
-          currentQuestionText = match ? match[1].trim() : bonusMatch[1].trim();
-          answerLines = [];
+          currentQuestionText = match ? match[2].trim() : bonusMatch[2].trim();
           currentQuestion = {
             category: categorizeQuestion(currentQuestionText),
             question: currentQuestionText,
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
-          if (isAnswerLine(line.trim()) || (answerLines.length > 0 && line.trim().startsWith("–"))) {
-            answerLines.push(line.trim());
+          if (isAllCaps(line.trim())) {
+            currentQuestion.answer = line.trim();
           } else {
             currentQuestionText += " " + line.trim();
           }
@@ -101,7 +102,6 @@
 
       if (currentQuestion) {
         currentQuestion.question = currentQuestionText.trim();
-        currentQuestion.answer = answerLines.join(" ").trim();
         questions.push(currentQuestion);
       }
 
