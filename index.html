@@ -52,9 +52,9 @@
   <script>
     function categorizeQuestion(text) {
       if (/Underworld|gods|heroes|myth/i.test(text)) return "Myth";
-      if (/poet|author|literature|play/i.test(text)) return "Literature";
-      if (/war|battle|Rome|historian/i.test(text)) return "History";
-      if (/Latin|Greek|grammar/i.test(text)) return "Language";
+      if (/poet|author|literature|Persius|Juvenal|Andronicus|Martial|Petronius|historian|play/i.test(text)) return "Literature";
+      if (/war|battle|Hannibal|Sulla|Marius/i.test(text)) return "History";
+      if (/Latin|Greek|grammar|verb|participle|motto/i.test(text)) return "Language";
       return "Uncategorized";
     }
 
