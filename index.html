@@ -59,7 +59,7 @@
     }
 
     function isAnswerLine(text) {
-      return /^[A-Z][A-Z\s()'-]*$/.test(text.trim()) && text.trim() !== "";
+      return /^[A-Z][A-Z\s()'–-]*$/.test(text.trim()) && text.trim() !== "";
     }
 
     function processText() {
@@ -91,7 +91,7 @@
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
-          if (isAnswerLine(line.trim())) {
+          if (isAnswerLine(line.trim()) || (answerLines.length > 0 && line.trim().startsWith("–"))) {
             answerLines.push(line.trim());
           } else {
             currentQuestionText += " " + line.trim();
