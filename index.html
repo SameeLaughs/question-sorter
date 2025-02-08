@@ -53,8 +53,8 @@
     function categorizeQuestion(text) {
       if (/Underworld|gods|heroes|myth/i.test(text)) return "Myth";
       if (/poet|author|literature|Persius|Juvenal|Andronicus|Martial|Petronius|historian|play/i.test(text)) return "Literature";
-      if (/war|battle|Hannibal|Sulla|Marius/i.test(text)) return "History";
-      if (/Latin|Greek|grammar|verb|participle|motto/i.test(text)) return "Language";
+      if (/war|battle|Hannibal|Sulla|Marius|Sertorius|Pompey/i.test(text)) return "History";
+      if (/Latin|Greek|grammar|verb|participle|motto|differentiate|meaning|grex|prex|nimis|nemus|ars|artus/i.test(text)) return "Language";
       return "Uncategorized";
     }
 
