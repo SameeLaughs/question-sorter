@@ -59,7 +59,10 @@
     }
 
     function isAllCaps(text) {
-      return text === text.toUpperCase() && text.trim() !== "";
+      const words = text.split(' ');
+      const firstWord = words[0];
+      const restWords = words.slice(1);
+      return firstWord === firstWord.toUpperCase() && restWords.every(word => word === word.toLowerCase() || word === word.toUpperCase());
     }
 
     function processText() {
