@@ -70,6 +70,7 @@
       const lines = inputText.split("\n");
       const questions = [];
       let currentQuestion = null;
+      let currentQuestionText = "";
 
       lines.forEach((line) => {
         // Match numbered questions (e.g., "1. Question?")
@@ -80,14 +81,16 @@
         // If it's a new question
         if (match || bonusMatch) {
           if (currentQuestion) {
+            // Push the previous question if it exists
+            currentQuestion.question = currentQuestionText.trim();
             questions.push(currentQuestion);
           }
           
-          // Determine the category for the question
-          const questionText = match ? match[2].trim() : bonusMatch[2].trim();
+          // Start a new question
+          currentQuestionText = match ? match[2].trim() : bonusMatch[2].trim();
           currentQuestion = {
-            category: categorizeQuestion(questionText),
-            question: questionText,
+            category: categorizeQuestion(currentQuestionText),
+            question: currentQuestionText,
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
@@ -95,14 +98,15 @@
           if (isAllCaps(line.trim())) {
             currentQuestion.answer = line.trim();
           } else {
-            // Otherwise, treat it as part of the answer (multi-line answers)
-            currentQuestion.answer += " " + line.trim();
+            // Otherwise, it's part of the question or answer
+            currentQuestionText += " " + line.trim();
           }
         }
       });
 
       // Push the last question
       if (currentQuestion) {
+        currentQuestion.question = currentQuestionText.trim();
         questions.push(currentQuestion);
       }
 
