@@ -59,6 +59,11 @@
       return "Uncategorized";
     }
 
+    // Check if the text is in all caps
+    function isAllCaps(text) {
+      return text === text.toUpperCase() && text.trim() !== "";
+    }
+
     // Process the text input to structure the questions
     function processText() {
       const inputText = document.getElementById('inputText').value;
@@ -72,27 +77,31 @@
         // Match bonus questions (e.g., "B1: Question?")
         const bonusMatch = line.match(/^B(\d):\s(.+)/);
         
-        if (match) {
+        // If it's a new question
+        if (match || bonusMatch) {
           if (currentQuestion) {
             questions.push(currentQuestion);
           }
+          
+          // Determine the category for the question
+          const questionText = match ? match[2].trim() : bonusMatch[2].trim();
           currentQuestion = {
-            category: categorizeQuestion(match[2]),
-            question: match[2].trim(),
-            answer: ""
-          };
-        } else if (bonusMatch && currentQuestion) {
-          questions.push(currentQuestion);
-          currentQuestion = {
-            category: categorizeQuestion(bonusMatch[2]),
-            question: bonusMatch[2].trim(),
+            category: categorizeQuestion(questionText),
+            question: questionText,
             answer: ""
           };
         } else if (currentQuestion && line.trim()) {
-          currentQuestion.answer = line.trim();
+          // If the line is all caps, treat it as the answer
+          if (isAllCaps(line.trim())) {
+            currentQuestion.answer = line.trim();
+          } else {
+            // Otherwise, treat it as part of the answer (multi-line answers)
+            currentQuestion.answer += " " + line.trim();
+          }
         }
       });
 
+      // Push the last question
       if (currentQuestion) {
         questions.push(currentQuestion);
       }
