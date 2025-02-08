@@ -59,7 +59,7 @@
     }
 
     function isAnswerLine(text) {
-      return /^[A-Z][A-Z\s()'–-]*$/.test(text.trim()) && text.trim() !== "";
+      return /^[A-Z][A-Z\s()'–-]*[a-z]?[A-Z\s()'–-]*$/.test(text.trim()) && text.trim() !== "";
     }
 
     function processText() {
@@ -71,7 +71,7 @@
       let answerLines = [];
 
       lines.forEach((line) => {
-        if (/score check/i.test(line)) return;
+        if (/score check|round/i.test(line)) return;
 
         const match = line.match(/^\d+\.\s(.+)/);
         const bonusMatch = line.match(/^B\d+:\s(.+)/);
