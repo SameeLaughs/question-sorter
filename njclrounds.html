@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certamen Round Parser</title>
+    <script>
+        function parseInput() {
+            const inputText = document.getElementById('inputText').value;
+            const rounds = [];
+            
+            // Regular expression to match each round and question block
+            const roundPattern = /(ROUND\s[IVXLCDM]+)\s([\s\S]+?)(?=(ROUND\s[IVXLCDM]+|$))/g;
+            let roundMatch;
+
+            // Parse rounds
+            while ((roundMatch = roundPattern.exec(inputText)) !== null) {
+                const round = {
+                    roundTitle: roundMatch[1],
+                    questions: []
+                };
+
+                const questionPattern = /(\d+):\s([^\n]+)((?:\sB\d:\s[^\n]+)*)/g;
+                let questionMatch;
+                const questionText = roundMatch[2];
+
+                // Parse questions in the round
+                while ((questionMatch = questionPattern.exec(questionText)) !== null) {
+                    const question = {
+                        number: questionMatch[1],
+                        question: questionMatch[2].trim(),
+                        followUps: []
+                    };
+
+                    const followUpPattern = /B\d:\s([^\n]+)/g;
+                    let followUpMatch;
+                    const followUpText = questionMatch[3];
+
+                    // Parse follow-ups for the question
+                    while ((followUpMatch = followUpPattern.exec(followUpText)) !== null) {
+                        question.followUps.push(followUpMatch[1].trim());
+                    }
+
+                    round.questions.push(question);
+                }
+
+                rounds.push(round);
+            }
+
+            // Output the result as JSON
+            document.getElementById('output').textContent = JSON.stringify(rounds, null, 2);
+        }
+    </script>
+</head>
+<body>
+
+<h1>Certamen Round Parser</h1>
+<textarea id="inputText" rows="15" cols="100" placeholder="Paste your Certamen text here"></textarea><br><br>
+<button onclick="parseInput()">Parse Input</button>
+
+<h2>Parsed JSON Output:</h2>
+<pre id="output"></pre>
+
+</body>
+</html>
