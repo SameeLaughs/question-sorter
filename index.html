@@ -67,16 +67,18 @@
       let currentQuestion = null;
 
       lines.forEach((line) => {
-        const match = line.match(/^\d+\.\s(.+)/);
-        const bonusMatch = line.match(/^(B\d):\s(.+)/);
-
+        // Match numbered questions (e.g., "1. Question?")
+        const match = line.match(/^(\d+)\.\s(.+)/);
+        // Match bonus questions (e.g., "B1: Question?")
+        const bonusMatch = line.match(/^B(\d):\s(.+)/);
+        
         if (match) {
           if (currentQuestion) {
             questions.push(currentQuestion);
           }
           currentQuestion = {
-            category: categorizeQuestion(match[1]),
-            question: match[1].trim(),
+            category: categorizeQuestion(match[2]),
+            question: match[2].trim(),
             answer: ""
           };
         } else if (bonusMatch && currentQuestion) {
