@@ -65,50 +65,52 @@
       return firstWord === firstWord.toUpperCase() && restWords.every(word => word === word.toLowerCase() || word === word.toUpperCase());
     }
 
-    function processText() {
-      const inputText = document.getElementById('inputText').value;
-      const lines = inputText.split("\n");
-      const questions = [];
-      let currentQuestion = null;
-      let currentQuestionText = "";
+function processText() {
+  const inputText = document.getElementById('inputText').value;
+  const lines = inputText.split("\n");
+  const questions = [];
 
-      lines.forEach((line) => {
-        if (/score check/i.test(line)) {
-          return;
-        }
+  let buffer = "";
 
-        const mainMatch = line.match(/^(\d+)\.\s(.+)/);
-        const bonusMatch = line.match(/^(B\d):\s(.+)/);
+  function pushBufferedQuestion() {
+    if (!buffer) return;
 
-        if (mainMatch || bonusMatch) {
-          if (currentQuestion) {
-            currentQuestion.question = currentQuestionText.trim();
-            questions.push(currentQuestion);
-          }
-          
-          currentQuestionText = mainMatch ? mainMatch[2].trim() : bonusMatch[2].trim();
-          currentQuestion = {
-            category: categorizeQuestion(currentQuestionText),
-            question: currentQuestionText,
-            answer: ""
-          };
-        } else if (currentQuestion && line.trim()) {
-          if (isAllCaps(line.trim())) {
-            currentQuestion.answer = line.trim();
-          } else {
-            currentQuestionText += " " + line.trim();
-          }
-        }
+    // Try to split buffer into question and answer
+    const match = buffer.match(/^(.*?\?)\s*(.+)$/s);
+    if (match) {
+      const q = match[1].trim();
+      const a = match[2].trim();
+      questions.push({
+        category: categorizeQuestion(q),
+        question: q,
+        answer: a
       });
-
-      if (currentQuestion) {
-        currentQuestion.question = currentQuestionText.trim();
-        questions.push(currentQuestion);
-      }
-
-      document.getElementById('jsonOutput').textContent = JSON.stringify(questions, null, 2);
-      document.getElementById('output').style.display = 'block';
     }
+
+    buffer = "";
+  }
+
+  for (let line of lines) {
+    line = line.trim();
+    if (!line || /score check/i.test(line)) continue;
+
+    // If line starts a new question
+    if (/^\d+\.\s|^B\d:/.test(line)) {
+      pushBufferedQuestion();
+      buffer = line.replace(/^\d+\.\s|^B\d:\s*/, '');
+    } else {
+      buffer += " " + line;
+    }
+  }
+
+  // Push any remaining question
+  pushBufferedQuestion();
+
+  // Show output
+  document.getElementById('jsonOutput').textContent = JSON.stringify(questions, null, 2);
+  document.getElementById('output').style.display = 'block';
+}
+
 
     document.getElementById('fileInput').addEventListener('change', function(event) {
       const file = event.target.files[0];
