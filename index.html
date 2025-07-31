@@ -50,11 +50,68 @@
   </div>
 
   <script>
+    
+    const authors = [
+    "caesar","ovid","cicero","vergil","horace","livy","quintus ennius","tacitus","cato the elder",
+    "catullus","juvenal","plautus","lucretius","naevius","sallust","martial","terence",
+    "quintillian","augustine","jerome","petronius","pliny the younger","propertius",
+    "seneca the younger","silius italicus","suetonius","lucan","apuleius","tibullus",
+    "accius","livius andronicus","varro reatinus","ambrose","persius","caecilius statius",
+    "gallus","lactantius","lucilius","nepos","pacuvius","statius","pliny the elder",
+    "gellius","tertullian","atticus","maecenas","symmachus","eusebius",
+    "ammianus marcellinus","frontinus","ausonius","vitruvius","syrus","polybius",
+    "fabius pictor","laberius","appius claudius caecus","valerius cato","varius rufus",
+    "hyginus","asinius pollio","celsus","valerius flaccus","phaedrus","macrobius",
+    "historiae augustae","minucius felix","caesar strabo","florus","columella",
+    "seneca the elder","remmius palaemon","varro atacinius","volcacius sedigitus",
+    "commodian","licinius calvus","verrius flaccus","valerius maximus","manilius",
+    "cornelius sisenna","coelius antipater","afranius","aelius stilo","cinna",
+    "plutarch","fronto","ulpian","cyprian","cato the younger","pomponius porphyrio",
+    "papinian","maximian","martianus capella","eutropius","cassius dio","prudentius",
+    "arnobius","boethius","aelius donatus","the venerable bede","lutatius catulus",
+    "rutilius rufus","panaetius","coruncanius","licinius macer","quadrigarius",
+    "cincius alimentus","calpurnius piso frugi","atta","quintus cicero","nigidius figulus",
+    "furius bibaculus","velleius paterculus","scribonius largus","curtius rufus",
+    "pomponius mela","pompeius trogus","apicius","titus labienus","strabo","josephus",
+    "diodorus siculus","cremutius cordus","calpurnius siculus","asconius pedianus",
+    "albinovanus pedo","testamentum porcelli","victorinus","vegetius","sulpicius severus",
+    "paulus","orosius","novatian","sidonius apollinaris","aurelius victor","querolus",
+    "procopius","paulinus of nola","nemesianus","galen","gaius the jurist","cassiodorus",
+    "claudius claudian","tiberius claudius donatus","pervigilium veneris","p. mucius scaevola",
+    "q. mucius scaevola augur","q. mucius scaevola pontifex","volusius","isidore",
+    "valerius antias","lucius acilius","sulpicius gallus","titinius","quintus valerius of sora",
+    "sempronius asellio","sempronius tuditanus","postumius albinus","manius manilius",
+    "mago","luscius lanuvinus","gaius acilius","cato licinanus","aurelius opillus",
+    "aelius paetus","rhetorica ad herennium","laevius","epidius","cornelius severus",
+    "rabirius","capito","caecilius epirota","vipstanus messalla","valerius probus",
+    "dio cocceianus","victor of vita","vibius sequester","vespa","venantius fortunatus",
+    "rutillus namatianus","servius honoratus","scriptores historiae augustae","sammonicus",
+    "salvian","rufinus of aquileia","quodvultdeus","plotius sacerdos","hostidius geta",
+    "palladius","nonius marcellus","merobaudes","marcellus empiricus","juvencus",
+    "julius solinus","hilary of poitiers","herodian","gregory the great","gregory of tours",
+    "granius licinianus","gargilius martial","fulgentius","firmicus maternus","epictetus",
+    "ennodius","dracontius","dicta catonis","dares and dictys","cyprianus gallus",
+    "charisius","censorinus","cassian","caelius sedulius","avianus","paulinus of pella",
+    "rufius festus","caesius bassus","sulpicius apollinaris","vennonius","santra",
+    "gnaeus gellius","furius of antias","gaius fannius","cassius hemina","p. licinius tegula",
+    "porcius licinius","pompilius","sextilius ena","antonius gnipho","ateius praetextatus",
+    "fenestella","labeo","servilius nonianus","laus pisonis","aemilius asper",
+    "remius favinus","prosper of aquitane","priscian","porfyrius","acta martyrum scillitanorum",
+    "peregrinatio aetharia","modestinus","julius obsequens","julian of eclanum",
+    "hegesippus","gennadius","corippus","caesellius vindex","benedict of nursia",
+    "avitus","avienus","arator","ampelius","valerius aedituus","atilius","turpilius",
+    "trabea","optatianus","marcus actorius naso","statius ursulus",
+    "aemilius macer","grattius","amafinius","platius","gaius titius","catius",
+    "popilius cleuor","musonius"
+  ];
+    
     function categorizeQuestion(text) {
       if (/Underworld|gods|heroes|myth/i.test(text)) return "Myth";
-      if (/poet|author|literature|Persius|Juvenal|Andronicus|Martial|Petronius|historian|play/i.test(text)) return "Literature";
       if (/war|battle|Hannibal|Sulla|Marius|Sertorius|Pompey/i.test(text)) return "History";
-      if (/Latin|Greek|grammar|verb|participle|motto|differentiate|meaning|grex|prex|nimis|nemus|ars|artus/i.test(text)) return "Language";
+      if (/word|Greek|grammar|verb|derivative|participle|ablative|dative|genitive|declension|subjunctive|motto|differentiate|meaning|grex|prex|nimis|nemus|ars|artus/i.test(text)) return "Language";
+      for (const name of authors) {
+      if (lower.includes(name)) return "Literature";
+    }
       return "Uncategorized";
     }
 
@@ -75,7 +132,7 @@ function processText() {
   function pushBufferedQuestion() {
     if (!buffer) return;
 
-    // Try to split buffer into question and answer
+    //  to split buffer into question and answer
     const match = buffer.match(/^(.*?\?)\s*(.+)$/s);
     if (match) {
       const q = match[1].trim();
@@ -94,7 +151,7 @@ function processText() {
     line = line.trim();
     if (!line || /score check/i.test(line)) continue;
 
-    // If line starts a new question
+    //  a new question
     if (/^\d+\.\s|^B\d:/.test(line)) {
       pushBufferedQuestion();
       buffer = line.replace(/^\d+\.\s|^B\d:\s*/, '');
@@ -103,10 +160,10 @@ function processText() {
     }
   }
 
-  // Push any remaining question
+  //  any remaining question
   pushBufferedQuestion();
 
-  // Show output
+  //  output
   document.getElementById('jsonOutput').textContent = JSON.stringify(questions, null, 2);
   document.getElementById('output').style.display = 'block';
 }
